@@ -1,3 +1,3 @@
-# YelpCamp
+# WWDeveloper   
 
-### Refactored by Ian Schoonover
+### Refactored by Yaseen Alkhafaji
