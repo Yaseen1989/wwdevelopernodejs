@@ -7,7 +7,8 @@
   "description": "YelpCamp v1",
   "main": "app.js",
   "scripts": {
-    "start": "node app",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Colt Steele",
@@ -25,7 +26,10 @@
     "method-override": "^2.3.5",
     "moment": "^2.17.1",
     "mongoose": "^4.11.9",
+    "nodemon": "^1.15.1",
     "passport": "^0.3.0",
+    "passport-facebook": "^2.1.1",
+    "passport-google-oauth20": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^3.1.0",
     "request": "^2.65.0"

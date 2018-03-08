@@ -3,6 +3,8 @@ var express     = require("express"),
     bodyParser  = require("body-parser"),
     mongoose    = require("mongoose"),
     passport    = require("passport"),
+    GoogleStrategy = require("passport-google-oauth20").Strategy,
+    FacebookStrategy = require("passport-facebook").Strategy,
     cookieParser = require("cookie-parser"),
     LocalStrategy = require("passport-local"),
     flash        = require("connect-flash"),
@@ -11,7 +13,8 @@ var express     = require("express"),
     User        = require("./models/user"),
     session = require("express-session"),
     seedDB      = require("./seeds"),
-    methodOverride = require("method-override");
+    methodOverride = require("method-override");clearInterval()
+    const keys = require("./config/keys");
 // configure dotenv
 require('dotenv').load();
 
@@ -48,6 +51,51 @@ app.use(require("express-session")({
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Google auth
+passport.use(new GoogleStrategy({
+    clientID: keys.googleClientID,
+    clientSecret: keys.googleClientSecret,
+    callbackURL: '/auth/google/callback'
+}, (accessToken, refreshToken, profile, done) => {
+    console.log("access Token: ", accessToken);
+    console.log("refresh Token: ", refreshToken);
+    console.log("profile ", profile);
+    
+}));
+app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+}));
+app.get(
+    '/auth/google/callback',
+    passport.authenticate('google'),
+    (err,req, res, next) => {
+        if (err.name === 'TokenError') {
+                console.log(err)
+                res.redirect('/'); // redirect them back to the login page
+            } else {
+                console.log(err)
+                res.redirect('/');
+            }
+        },
+    (req, res) => { // On success, redirect back to '/'
+        res.redirect('/');
+    }
+);
+// facebook auth
+//passport.use(new FacebookStrategy({
+//    clientID: keys.facebookClientID,
+ //   clientSecret: keys.facebookClientSecret,
+//    callbackURL: 'https://magicteam-yaseen2016.c9users.io/auth/facebook/callback'
+//}, accessfacebookToken => {
+ //   console.log(accessfacebookToken);
+//}));
+//app.get('/auth/facebook/', passport.authenticate('facebook'));
+//app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res) {
+    // Successful authentication, redirect home.
+//    res.redirect('/campgrounds');
+ // });
+
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -65,5 +113,5 @@ app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
 app.listen(process.env.PORT, process.env.IP, function(){
-   console.log("The YelpCamp Server Has Started!");
+   console.log("The WWDeveloper Server Has Started!");
 });
